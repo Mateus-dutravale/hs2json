@@ -58,7 +58,7 @@ library
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  SimpleJSON
+    exposed-modules:  SimpleJSON, PutJSON
 
     -- Modules included in this library but not exported.
     -- other-modules:
