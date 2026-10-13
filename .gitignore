@@ -1,0 +1,10 @@
+dist-newstyle/
+*.hi
+*.o
+*.tix
+.hpc/
+.ghc.environment.*
+cabal.project.local
+cabal.project.local~
+GUIA_CODEX_HS2JSON.md
+docs/
