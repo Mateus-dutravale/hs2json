@@ -31,9 +31,6 @@ version:            0.1.0.0
 -- The license under which the package is released.
 license:            MIT
 
--- The file containing the license text.
-license-file:       LICENSE
-
 -- The package author(s).
 author:             Mateus Dutra
 
@@ -58,7 +55,7 @@ library
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  SimpleJSON, PutJSON, PrettyJSON
+    exposed-modules:  SimpleJSON, PutJSON, PrettyJSON, Prettify
 
     -- Modules included in this library but not exported.
     -- other-modules:
