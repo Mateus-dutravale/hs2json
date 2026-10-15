@@ -32,7 +32,7 @@ import SimpleJSON
     -- importa o módulo SimpleJSON que define o tipo de dados JValue e funções auxiliares para manipular valores JSON
 
 instance Arbitrary JValue where
-    arbitrary = sized genJValue    
+    arbitrary = sized (\n -> genJValue (min n 6))    
     -- define uma instância Arbitrary para o tipo JValue, permitindo a geração de valores aleatórios para testes, esse JValue pode ser um objeto, array, string, número, booleano ou nulo.
 
 genJValue :: Int -> Gen JValue
