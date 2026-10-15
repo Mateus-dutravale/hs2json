@@ -61,6 +61,27 @@ prop_jnull_is_null :: Bool
 prop_jnull_is_null = isNull JNull
 -- prop_jnull_is_null é uma propriedade que verifica se o valor JNull é considerado nulo usando a função isNull. JNull é um construtor do tipo JValue que representa o valor nulo em JSON. A função isNull retorna True se o valor for JNull e False caso contrário. 
 
+-- Aqui estão algumas propriedades adicionais para testar as funções de extração de valores do tipo JValue:
+
+prop_getString :: String -> Bool
+prop_getString s = getString (JString s) == Just s
+-- prop_getString é uma propriedade que verifica se a função getString retorna o valor correto quando aplicada a um JValue do tipo JString. Ela recebe uma string s como entrada e cria um JValue usando o construtor JString. Em seguida, ela chama a função getString com esse JValue e compara o resultado com Just s, que é o valor esperado. Se a função getString funcionar corretamente, a propriedade deve retornar True.
+
+prop_getInt :: Int -> Bool
+prop_getInt n = getInt (JNumber (fromIntegral n)) == Just n
+-- prop_getInt é uma propriedade que verifica se a função getInt retorna o valor correto quando aplicada a um JValue do tipo JNumber. Ela recebe um inteiro n como entrada e cria um JValue usando o construtor JNumber, convertendo n para Double usando fromIntegral. Em seguida, ela chama a função getInt com esse JValue e compara o resultado com Just n, que é o valor esperado. Se a função getInt funcionar corretamente, a propriedade deve retornar True.
+
+prop_getDouble :: Double -> Bool
+prop_getDouble d = getDouble (JNumber d) == Just d
+
+prop_getBool :: Bool -> Bool
+prop_getBool b = getBool (JBool b) == Just b
+
+prop_isNull :: JValue -> Bool
+prop_isNull v = case v of
+    JNull -> isNull v
+    _     -> not (isNull v)
+
 return []   
 -- retorna uma lista vazia, usada para indicar que não há propriedades adicionais a serem testadas
 runTests :: IO Bool
