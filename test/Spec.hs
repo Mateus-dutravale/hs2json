@@ -105,6 +105,21 @@ prop_accessors_exclusivity v = case v of
 
 -- prop_accessors_exclusivity é uma propriedade que verifica se as funções de extração de valores do tipo JValue são mutuamente exclusivas. Ela recebe um JValue v como entrada e usa pattern matching para verificar o tipo de v. Para cada tipo, ela chama a função correspondente e compara o resultado com o valor esperado, enquanto garante que as outras funções retornem Nothing. Se todas as funções funcionarem corretamente, a propriedade deve retornar True.
 
+prop_string_enclosed_in_quotes :: String -> Bool
+prop_string_enclosed_in_quotes s =
+    let rendered = compact (string s)
+    in length rendered >= 2 && head rendered == '"' && last rendered == '"'
+
+-- verifica se a função string do módulo PrettyJSON retorna uma representação de string JSON corretamente formatada, ou seja, se a string resultante está entre aspas. A função compact é usada para gerar uma versão compacta da string JSON. A propriedade verifica se o comprimento da string renderizada é pelo menos 2 (para as aspas) e se o primeiro e o último caractere são aspas.
+
+prop_string_no_raw_control_chars :: String -> Bool
+prop_string_no_raw_control_chars s =
+    let rendered = compact (string s)
+    in all isSafeChar rendered
+  where
+    isSafeChar c = ord c >= 32 && ord c /= 127 && ord c <= 255
+
+-- verifica se a função string do módulo PrettyJSON não gera caracteres de controle brutos na representação de string JSON. A função compact é usada para gerar uma versão compacta da string JSON. A propriedade verifica se todos os caracteres da string renderizada são seguros, ou seja, se o código Unicode do caractere está entre 32 e 255, excluindo o caractere de controle 127 (DEL). A função isSafeChar é usada para verificar se um caractere é seguro.
 
 return []   
 -- retorna uma lista vazia, usada para indicar que não há propriedades adicionais a serem testadas
