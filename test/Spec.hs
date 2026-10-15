@@ -73,14 +73,38 @@ prop_getInt n = getInt (JNumber (fromIntegral n)) == Just n
 
 prop_getDouble :: Double -> Bool
 prop_getDouble d = getDouble (JNumber d) == Just d
+-- prop_getDouble é uma propriedade que verifica se a função getDouble retorna o valor correto quando aplicada a um JValue do tipo JNumber. Ela recebe um número de ponto flutuante d como entrada e cria um JValue usando o construtor JNumber. Em seguida, ela chama a função getDouble com esse JValue e compara o resultado com Just d, que é o valor esperado. Se a função getDouble funcionar corretamente, a propriedade deve retornar True.
 
 prop_getBool :: Bool -> Bool
 prop_getBool b = getBool (JBool b) == Just b
+-- prop_getBool é uma propriedade que verifica se a função getBool retorna o valor correto quando aplicada a um JValue do tipo JBool. Ela recebe um valor booleano b como entrada e cria um JValue usando o construtor JBool. Em seguida, ela chama a função getBool com esse JValue e compara o resultado com Just b, que é o valor esperado. Se a função getBool funcionar corretamente, a propriedade deve retornar True.
 
 prop_isNull :: JValue -> Bool
 prop_isNull v = case v of
     JNull -> isNull v
     _     -> not (isNull v)
+-- prop_isNull é uma propriedade que verifica se a função isNull retorna o valor correto quando aplicada a um JValue do tipo JNull. Ela recebe um JValue v como entrada e usa pattern matching para verificar se v é do tipo JNull. Se for, ela chama a função isNull com v e compara o resultado com True. Se não for, ela compara o resultado com False. Se a função isNull funcionar corretamente, a propriedade deve retornar True.
+
+prop_getObject :: String -> JValue -> Bool
+prop_getObject k v = getObject (JObject [(k, v)]) == Just [(k, v)]
+-- prop_getObject é uma propriedade que verifica se a função getObject retorna o valor correto quando aplicada a um JValue do tipo JObject. Ela recebe uma string k e um JValue v como entrada e cria um JValue usando o construtor JObject, que contém uma lista de pares chave-valor com apenas um elemento (k, v). Em seguida, ela chama a função getObject com esse JValue e compara o resultado com Just [(k, v)], que é o valor esperado. Se a função getObject funcionar corretamente, a propriedade deve retornar True.
+
+prop_getArray :: JValue -> Bool
+prop_getArray v = getArray (JArray [v]) == Just [v]
+-- prop_getArray é uma propriedade que verifica se a função getArray retorna o valor correto quando aplicada a um JValue do tipo JArray. Ela recebe um JValue v como entrada e cria um JValue usando o construtor JArray, que contém uma lista com apenas um elemento v. Em seguida, ela chama a função getArray com esse JValue e compara o resultado com Just [v], que é o valor esperado. Se a função getArray funcionar corretamente, a propriedade deve retornar True.
+
+
+prop_accessors_exclusivity :: JValue -> Bool
+prop_accessors_exclusivity v = case v of
+    JString s -> getString v == Just s && getInt v == Nothing    && getObject v == Nothing
+    JNumber d -> getDouble v == Just d && getString v == Nothing && getArray v == Nothing
+    JBool b   -> getBool v == Just b   && getString v == Nothing && getDouble v == Nothing
+    JNull     -> isNull v              && getString v == Nothing && getBool v == Nothing
+    JObject o -> getObject v == Just o && getArray v == Nothing  && getString v == Nothing
+    JArray a  -> getArray v == Just a  && getObject v == Nothing && getBool v == Nothing
+
+-- prop_accessors_exclusivity é uma propriedade que verifica se as funções de extração de valores do tipo JValue são mutuamente exclusivas. Ela recebe um JValue v como entrada e usa pattern matching para verificar o tipo de v. Para cada tipo, ela chama a função correspondente e compara o resultado com o valor esperado, enquanto garante que as outras funções retornem Nothing. Se todas as funções funcionarem corretamente, a propriedade deve retornar True.
+
 
 return []   
 -- retorna uma lista vazia, usada para indicar que não há propriedades adicionais a serem testadas
