@@ -121,6 +121,20 @@ prop_string_no_raw_control_chars s =
 
 -- verifica se a função string do módulo PrettyJSON não gera caracteres de controle brutos na representação de string JSON. A função compact é usada para gerar uma versão compacta da string JSON. A propriedade verifica se todos os caracteres da string renderizada são seguros, ou seja, se o código Unicode do caractere está entre 32 e 255, excluindo o caractere de controle 127 (DEL). A função isSafeChar é usada para verificar se um caractere é seguro.
 
+prop_compact_text :: String -> Bool
+prop_compact_text s = compact (text s) == s
+
+-- verifica se a função compact do módulo Prettify retorna a string original quando aplicada a uma representação de texto JSON gerada pela função text. A propriedade compara a string compactada com a string original s. Se a função compact funcionar corretamente, a propriedade deve retornar True.
+
+prop_pretty_preserves_tokens :: Positive Int -> JValue -> Bool
+prop_pretty_preserves_tokens (Positive w) v =
+    stripLayout (pretty w doc) == stripLayout (compact doc)
+  where
+    doc = renderJValue v
+    stripLayout = filter (\c -> c /= ' ' && c /= '\n')
+
+-- verifica se a função pretty do módulo Prettify preserva os tokens da representação JSON quando aplicada a um valor JValue. A propriedade recebe um valor positivo w (largura) e um JValue v como entrada. Ela gera uma representação de documento doc usando a função renderJValue e compara a versão "layout-free" da string gerada pela função pretty com a versão "layout-free" da string gerada pela função compact. A função stripLayout remove espaços e quebras de linha da string para garantir que apenas os tokens sejam comparados. Se a função pretty funcionar corretamente, a propriedade deve retornar True.
+
 return []   
 -- retorna uma lista vazia, usada para indicar que não há propriedades adicionais a serem testadas
 runTests :: IO Bool
