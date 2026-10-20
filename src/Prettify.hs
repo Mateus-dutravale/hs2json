@@ -117,29 +117,25 @@ compact doc = render [(0, doc)]
 
 
 pretty :: Int -> Doc -> String
-pretty width doc = compact (best 0 [(0, doc)])
+pretty width doc = best 0 [(0, doc)]
   where
-    best _ [] = Empty
+    best _ [] = ""
     best column ((indentation, current):docs) = case current of
         Empty      -> best column docs
-        Chr c      -> Chr c <> best (column + 1) docs
-        Txt s      -> Txt s <> best (column + length s) docs
-        Line       -> Line <> text (replicate indentation ' ')
-                           <> best indentation docs
+        Chr c      -> c : best (column + 1) docs
+        Txt s      -> s ++ best (column + length s) docs
+        Line       -> '\n' : replicate indentation ' '
+                           ++ best indentation docs
         Concat x y -> best column ((indentation, x) : (indentation, y) : docs)
         Union x y  -> nicest column (best column ((indentation, x) : docs))
-                                      (best column ((indentation, y) : docs))
+                                    (best column ((indentation, y) : docs))
         Nest amount nested -> best column ((indentation + amount, nested) : docs)
 
     nicest column first second
         | fits (width - column) first = first
-        | otherwise                  = second
+        | otherwise                   = second
 
     fits remaining _ | remaining < 0 = False
-    fits _ Empty = True
-    fits remaining (Chr _) = fits (remaining - 1) Empty
-    fits remaining (Txt s) = fits (remaining - length s) Empty
-    fits _ Line = True
-    fits remaining (Concat x y) = fits remaining x && fits remaining y
-    fits remaining (Union x _) = fits remaining x
-    fits remaining (Nest _ nestedDoc) = fits remaining nestedDoc
+    fits _ ""        = True
+    fits _ ('\n':_)  = True
+    fits remaining (_:cs) = fits (remaining - 1) cs

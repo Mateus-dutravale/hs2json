@@ -50,8 +50,10 @@ genJValue n
         ]
     recursive = oneof
         [ JObject <$> resize (n `div` 2) (listOf field)
-        , JArray  <$> resize (n `div` 2) (listOf smaller)
+        , JArray  <$> resize (n `div` 2) (listOf smaller) 
         ]
+
+-- resize primeiro reduz o tamanho do gerador para evitar que ele cresça indefinidamente, garantindo que os valores gerados sejam de tamanho controlado, ou seja, n dividido por 2, o que significa que os valores gerados serão menores do que o tamanho original n em 50%. Isso ajuda a evitar que os testes se tornem muito lentos ou que gerem valores muito grandes, o que poderia levar a falhas de memória ou desempenho.
 -- genJValue é uma função que gera valores aleatórios do tipo JValue dependendo do tamanho n fornecido
     -- Se n for menor ou igual a 0, ele gera apenas valores base, ou seja, valores simples como strings, números, booleanos ou nulos.
     -- Se n for maior que 0, ele gera valores base com maior probabilidade (4 vezes mais provável) e valores recursivos (objetos ou arrays) com menor probabilidade
