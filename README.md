@@ -1,6 +1,6 @@
 # hs2json — Biblioteca de Serialização e Pretty Printing JSON em Haskell
 
-🎥 **Vídeo de Apresentação (10–15 min):** [ Assistir à apresentação da dupla (LINK AQUI) ](#)
+🎥 **Vídeo de Apresentação (10–15 min):** [Assistir à apresentação da dupla](https://drive.google.com/drive/folders/1B5yMULpaoY2W4yi7L7hdTSHfpxcyr8NY?hl=pt-br)
 
 ## Sobre o Projeto
 Projeto desenvolvido para a Avaliação da Unidade 2 da disciplina de Programação Funcional. O `hs2json` implementa uma representação algébrica de dados JSON em Haskell, combinadores de *pretty printing* baseados em álgebra de documentos (`Doc`) e uma suíte de testes baseada em propriedades utilizando `QuickCheck`.
